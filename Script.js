@@ -1,9 +1,9 @@
 const fs = require("fs");
 const axios = require("axios");
 const inquirer = require("inquirer");
-const util = require("util")
-var PDF = require('pdfkit');     
-var request = require('request');   
+const util = require("util");
+const PDF = require('pdfkit');     
+const request = require('request');   
 
 // constructor for Projects contains all pertinent data
 Project = function(){
@@ -19,8 +19,7 @@ this.questions='',
 this.username= ''
 }
 const Proj = new Project();
-// takes in the project object and generates standard text.
-
+// takes in the project object and generates standard text
 function generateText(Proj){
   const {title, description, email, contents, use, license} = Proj
   let text = ` 
@@ -74,50 +73,32 @@ function promptUser(){
     }
   ])};
 
-
 promptUser()
   .then(function($answers) {
     let answers = $answers;
-    // console.log(answers);
-   Proj.username= answers.username;
-   Proj.title = answers.title;
+    Proj.username= answers.username;
+    Proj.title = answers.title;
+    Proj.use= answers.use;
+    Proj.description = answers.description;
   })
-  .then(function() {
-    const queryUrl = `https://api.github.com/users/${Proj.username}`;
-     axios
-    .get(`${queryUrl}`)
-    .then(function(res) {
-      console.log(res);
-      let data = res.data
-      let {email, avatar_url} = data;
-      Proj.pic = avatar_url
-      console.log(Proj)
-     });
-    
+    .then(function() {
+      const queryUrl = `https://api.github.com/users/${Proj.username}`;
+       axios
+      .get(`${queryUrl}`)
+        .then(function(res) {
+          let data = res.data;
+          let {email, avatar_url} = data;
+          Proj.pic = avatar_url;
+          Proj.email= email;
+          console.log(Proj);
+        });
     })
-    .then(function(){
+    .then(function()
+    {
       var text = generateText(Proj);
       console.log(text);
-    })
+      generatePDF();  
+    })  
     .catch(function(err) {
     console.log(err);
     });
-  //.then{ 
-    //   doc = new PDF(); 
-    //   doc.pipe(fs.createWriteStream('.\ReadME_Maker\profile.pdf'));  
-    //   request({
-    //     url: `${Project.pic}`,
-    //     encoding: null // Prevents Request from converting response to string
-    //     }, function(err, response, body) {
-    //   if (err) throw err;
-      
-    //   doc.image(body,260, 50,{height:100,width:100});
-    //   doc.text()
-    //   doc.text('Hello this is a demo file',100,200)
-    //   // Close document and, by extension, response
-    //   doc.end(); 
-    //   return;
-    //   });
-    // }
-
-
