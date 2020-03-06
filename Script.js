@@ -14,9 +14,9 @@ const Project = function(){
   this.pic ='',
   this.use= '',
   this.license= '',
-  this.test='',
-  this.questions='',
-  this.username= ''
+  this.test="Jest",
+  this.questions='NA',
+  this.username= 'NA'
   this.badge ='https://img.shields.io/github/status/contexts/pulls/MastadonRising/bs_portfolio/1110'
 }
 
@@ -100,6 +100,7 @@ promptUser()
     Proj.title = answers.title;
     Proj.use= answers.use;
     Proj.description = answers.description;
+    Proj.license= answers.license;
   })
     .then(function() {
       const queryUrl = `https://api.github.com/users/${Proj.username}`;
